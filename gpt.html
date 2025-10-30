@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday to Arshad Pasha 🎹</title>
+</head>
+<body style="text-align:center; font-family: sans-serif; margin-top:50px;">
+  <h2>🎵 Happy Birthday to You, Arshad Pasha 🎶</h2>
+  <button id="playBtn" style="font-size:20px; padding:10px 20px;">Play Song</button>
+
+  <script>
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioContext();
+
+    // Frequency map for notes (approx piano tones)
+    const notes = {
+      'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23,
+      'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
+      'C5': 523.25, 'D5': 587.33, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99
+    };
+
+    // Happy Birthday melody (note, duration in seconds)
+    const melody = [
+      ['G4', 0.4], ['G4', 0.4], ['A4', 0.8], ['G4', 0.8], ['C5', 0.8], ['B4', 1.2],
+      ['G4', 0.4], ['G4', 0.4], ['A4', 0.8], ['G4', 0.8], ['D5', 0.8], ['C5', 1.2],
+      ['G4', 0.4], ['G4', 0.4], ['G5', 0.8], ['E5', 0.8], ['C5', 0.8], ['B4', 0.8], ['A4', 0.8],
+      ['F5', 0.4], ['F5', 0.4], ['E5', 0.8], ['C5', 0.8], ['D5', 0.8], ['C5', 1.4]
+    ];
+
+    function playNote(note, duration, time) {
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.type = 'sine';
+      oscillator.frequency.value = notes[note];
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      // soft fade in & out
+      gainNode.gain.setValueAtTime(0, time);
+      gainNode.gain.linearRampToValueAtTime(0.5, time + 0.05);
+      gainNode.gain.linearRampToValueAtTime(0, time + duration - 0.05);
+
+      oscillator.start(time);
+      oscillator.stop(time + duration);
+    }
+
+    function playMelody() {
+      let currentTime = ctx.currentTime;
+      melody.forEach(([note, duration]) => {
+        playNote(note, duration, currentTime);
+        currentTime += duration + 0.05;
+      });
+    }
+
+    document.getElementById('playBtn').addEventListener('click', async () => {
+      await ctx.resume();
+      playMelody();
+    });
+  </script>
+</body>
+</html>

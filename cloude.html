@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Arshad Pasha</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .birthday-header {
+            text-align: center;
+            margin-bottom: 30px;
+            z-index: 10;
+        }
+
+        .birthday-text {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+                         0 0 40px rgba(255, 182, 193, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .name {
+            color: #FFD700;
+            font-size: 1.2em;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+        }
+
+        .lyrics {
+            font-size: 2em;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            min-height: 60px;
+            line-height: 1.5;
+            letter-spacing: 2px;
+        }
+
+        .lyrics .word {
+            display: inline-block;
+            margin: 0 4px;
+            transition: all 0.3s ease;
+        }
+
+        .lyrics .word.highlight {
+            color: #FFD700;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.9),
+                         0 0 40px rgba(255, 215, 0, 0.6);
+            transform: scale(1.2) translateY(-5px);
+        }
+
+        .piano-container {
+            background: rgba(42, 42, 42, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .piano {
+            display: flex;
+            position: relative;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .key {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.08s ease;
+        }
+
+        .white-key {
+            width: 50px;
+            height: 220px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f0f0f0 100%);
+            border: 2px solid #222;
+            border-radius: 0 0 5px 5px;
+            margin: 0 1px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .white-key:hover {
+            background: linear-gradient(to bottom, #f0f0f0 0%, #e0e0e0 100%);
+        }
+
+        .white-key.active {
+            background: linear-gradient(to bottom, #d0d0d0 0%, #c0c0c0 100%);
+            transform: translateY(3px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .black-key {
+            position: absolute;
+            width: 35px;
+            height: 140px;
+            background: linear-gradient(to bottom, #2a2a2a 0%, #000000 100%);
+            border: 2px solid #000;
+            border-radius: 0 0 3px 3px;
+            z-index: 2;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .black-key:hover {
+            background: linear-gradient(to bottom, #3a3a3a 0%, #1a1a1a 100%);
+        }
+
+        .black-key.active {
+            background: linear-gradient(to bottom, #1a1a1a 0%, #0a0a0a 100%);
+            transform: translateY(3px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .key.playing {
+            animation: keyGlow 0.4s ease;
+        }
+
+        @keyframes keyGlow {
+            0%, 100% { 
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.9),
+                           0 0 60px rgba(255, 105, 180, 0.5);
+            }
+        }
+
+        .note-label {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .black-key .note-label {
+            color: #999;
+            bottom: 5px;
+            font-size: 9px;
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .play-button {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #333;
+            border: none;
+            padding: 18px 45px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+        .play-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 25px rgba(255, 215, 0, 0.6);
+        }
+
+        .play-button:active {
+            transform: translateY(0);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            animation: confettiFall 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .sparkle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkleFloat 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes sparkleFloat {
+            0%, 100% { 
+                transform: translateY(0) scale(1);
+                opacity: 0;
+            }
+            50% { 
+                transform: translateY(-30px) scale(1.5);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="birthday-header">
+        <div class="birthday-text">
+            🎉 Happy Birthday <span class="name">Arshad Pasha</span>! 🎂
+        </div>
+        <div class="lyrics" id="lyrics"></div>
+    </div>
+
+    <div class="piano-container">
+        <div class="piano" id="piano"></div>
+        <div class="controls">
+            <button class="play-button" id="playButton">🎵 Play Birthday Song</button>
+        </div>
+    </div>
+
+    <script>
+        // Note frequencies in Hz (C Major scale with flats)
+        const notes = {
+            'C': 261.63, 'D': 293.66, 'E': 329.63, 'F': 349.23, 
+            'G': 392.00, 'A': 440.00, 'Bb': 466.16, 'C5': 523.25
+        };
+
+        // Piano layout (two octaves simplified)
+        const pianoLayout = [
+            { note: 'C', type: 'white' },
+            { note: 'D', type: 'white' },
+            { note: 'E', type: 'white' },
+            { note: 'F', type: 'white' },
+            { note: 'G', type: 'white' },
+            { note: 'A', type: 'white' },
+            { note: 'Bb', type: 'white' },
+            { note: 'C5', type: 'white' }
+        ];
+
+        // Happy Birthday melody with lyrics (C Major)
+        const lyrics = [
+            { line: "🎵 Happy birthday to you", words: ["🎵", "Happy", "birthday", "to", "you", "..."] },
+            { line: "🎵 Happy birthday to you", words: ["🎵", "Happy", "birthday", "to", "you", "..."] },
+            { line: "🎵 Happy birthday dear Arshad Pasha", words: ["🎵", "Happy", "birthday", "dear", "Arshad", "Pasha", "..."] },
+            { line: "🎵 Happy birthday to you 🎂", words: ["🎵", "Happy", "birthday", "to", "you", "🎂"] }
+        ];
+
+        const melody = [
+            // Line 1: "Happy birthday to you"
+            { note: 'C', duration: 400, line: 0, wordIndex: 1 },
+            { note: 'C', duration: 200, line: 0, wordIndex: 2 },
+            { note: 'D', duration: 600, line: 0, wordIndex: 2 },
+            { note: 'C', duration: 600, line: 0, wordIndex: 3 },
+            { note: 'F', duration: 600, line: 0, wordIndex: 4 },
+            { note: 'E', duration: 900, line: 0, wordIndex: 5 },
+            
+            // Line 2: "Happy birthday to you"
+            { note: 'C', duration: 400, line: 1, wordIndex: 1 },
+            { note: 'C', duration: 200, line: 1, wordIndex: 2 },
+            { note: 'D', duration: 600, line: 1, wordIndex: 2 },
+            { note: 'C', duration: 600, line: 1, wordIndex: 3 },
+            { note: 'G', duration: 600, line: 1, wordIndex: 4 },
+            { note: 'F', duration: 900, line: 1, wordIndex: 5 },
+            
+            // Line 3: "Happy birthday dear Arshad Pasha"
+            { note: 'C', duration: 400, line: 2, wordIndex: 1 },
+            { note: 'C', duration: 200, line: 2, wordIndex: 2 },
+            { note: 'C5', duration: 600, line: 2, wordIndex: 2 },
+            { note: 'A', duration: 600, line: 2, wordIndex: 3 },
+            { note: 'F', duration: 600, line: 2, wordIndex: 4 },
+            { note: 'E', duration: 600, line: 2, wordIndex: 5 },
+            { note: 'D', duration: 900, line: 2, wordIndex: 6 },
+            
+            // Line 4: "Happy birthday to you"
+            { note: 'Bb', duration: 400, line: 3, wordIndex: 1 },
+            { note: 'Bb', duration: 200, line: 3, wordIndex: 2 },
+            { note: 'A', duration: 600, line: 3, wordIndex: 2 },
+            { note: 'F', duration: 600, line: 3, wordIndex: 3 },
+            { note: 'G', duration: 600, line: 3, wordIndex: 4 },
+            { note: 'F', duration: 1200, line: 3, wordIndex: 5 }
+        ];
+
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const keyElements = {};
+
+        // Create piano keys
+        const piano = document.getElementById('piano');
+        pianoLayout.forEach((noteData, index) => {
+            const key = document.createElement('div');
+            key.className = 'key white-key';
+            key.dataset.note = noteData.note;
+
+            const label = document.createElement('div');
+            label.className = 'note-label';
+            label.textContent = noteData.note;
+            key.appendChild(label);
+
+            key.addEventListener('mousedown', () => {
+                playNote(noteData.note);
+                animateKey(noteData.note);
+            });
+
+            piano.appendChild(key);
+            keyElements[noteData.note] = key;
+        });
+
+        function playNote(noteName, duration = 0.3) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.value = notes[noteName];
+            oscillator.type = 'triangle'; // Warmer, richer sound
+
+            // Smoother, louder envelope
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.6, audioContext.currentTime + 0.02);
+            gainNode.gain.linearRampToValueAtTime(0.5, audioContext.currentTime + duration * 0.7);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration + 0.1);
+        }
+
+        function animateKey(noteName) {
+            const key = keyElements[noteName];
+            if (key) {
+                key.classList.add('active', 'playing');
+                setTimeout(() => {
+                    key.classList.remove('active', 'playing');
+                }, 250);
+            }
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = ['#FFD700', '#FF69B4', '#87CEEB', '#98FB98', '#FFA500'][Math.floor(Math.random() * 5)];
+            confetti.style.animationDelay = Math.random() * 2 + 's';
+            confetti.style.width = (Math.random() * 8 + 6) + 'px';
+            confetti.style.height = confetti.style.width;
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 4000);
+        }
+
+        function createSparkle(x, y) {
+            for (let i = 0; i < 5; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = x + (Math.random() * 40 - 20) + 'px';
+                sparkle.style.top = y + (Math.random() * 40 - 20) + 'px';
+                sparkle.style.animationDelay = (Math.random() * 0.3) + 's';
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => sparkle.remove(), 3000);
+            }
+        }
+
+        const lyricsDiv = document.getElementById('lyrics');
+        let currentLine = -1;
+
+        function displayLyrics(lineIndex, wordIndex) {
+            if (lineIndex !== currentLine) {
+                // New line - display full line with all words
+                currentLine = lineIndex;
+                const lyricLine = lyrics[lineIndex];
+                lyricsDiv.innerHTML = '';
+                
+                lyricLine.words.forEach((word, idx) => {
+                    const span = document.createElement('span');
+                    span.className = 'word';
+                    span.textContent = word;
+                    span.dataset.index = idx;
+                    lyricsDiv.appendChild(span);
+                });
+            }
+
+            // Highlight current word
+            const words = lyricsDiv.querySelectorAll('.word');
+            words.forEach((word, idx) => {
+                if (idx === wordIndex) {
+                    word.classList.add('highlight');
+                } else {
+                    word.classList.remove('highlight');
+                }
+            });
+        }
+
+        async function playMelody() {
+            currentLine = -1;
+            
+            // Create confetti burst
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => createConfetti(), i * 100);
+            }
+
+            for (const noteData of melody) {
+                // Display and highlight lyrics
+                displayLyrics(noteData.line, noteData.wordIndex);
+
+                // Play note and animate
+                playNote(noteData.note, noteData.duration / 1000);
+                animateKey(noteData.note);
+                
+                // Create sparkles at key position
+                const key = keyElements[noteData.note];
+                if (key) {
+                    const rect = key.getBoundingClientRect();
+                    createSparkle(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                }
+
+                await new Promise(resolve => setTimeout(resolve, noteData.duration));
+            }
+
+            // Final message
+            lyricsDiv.innerHTML = '<span class="word highlight">🎊 May all your wishes come true! 🎊</span>';
+        }
+
+        let isPlaying = false;
+
+        document.getElementById('playButton').addEventListener('click', async () => {
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+            }
+
+            if (!isPlaying) {
+                isPlaying = true;
+                document.getElementById('playButton').textContent = '🎹 Playing...';
+                document.getElementById('playButton').style.background = 'linear-gradient(135deg, #FF69B4, #FFB6C1)';
+                
+                // Play melody continuously for 10 seconds
+                const startTime = Date.now();
+                while (Date.now() - startTime < 10000) {
+                    await playMelody();
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                }
+                
+                isPlaying = false;
+                document.getElementById('playButton').textContent = '🎵 Play Birthday Song';
+                document.getElementById('playButton').style.background = 'linear-gradient(135deg, #FFD700, #FFA500)';
+                lyricsDiv.textContent = '';
+            }
+        });
+
+        // Resume audio context on first interaction
+        document.addEventListener('click', () => {
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }, { once: true });
+    </script>
+</body>
+</html>
